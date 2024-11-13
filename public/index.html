@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz App</title>
+    <script src="https://www.gstatic.com/firebasejs/7.17.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.17.2/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.17.2/firebase-auth.js"></script>
+    <style>
+      /* Existing CSS */
+      body {
+        background: linear-gradient(to right, #6a11cb, #2575fc);
+        font-family: Arial, Helvetica, sans-serif;
+        margin: 0;
+        padding: 0;
+        color: white;
+        text-align: center;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      h1 {
+        font-size: 40px;
+        margin-top: 20px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      #timer {
+        font-size: 40px;
+        margin-top: 10px;
+        font-weight: bold;
+        letter-spacing: 2px;
+      }
+
+      #ques {
+        font-size: 20px;
+        margin-top: 30px;
+      }
+
+      .options-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 20px;
+      }
+
+      label {
+        display: block;
+        background-color: rgba(0, 0, 0, 0.1);
+        padding: 15px 20px;
+        margin: 10px 0;
+        width: 300px;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: all 0.3s ease-in-out;
+        position: relative;
+        text-align: left;
+      }
+
+      label:hover {
+        background-color: rgba(0, 0, 0, 0.3);
+        transform: scale(1.05);
+      }
+
+      .selected {
+        background-color: rgba(0, 123, 255, 0.3);
+        border: 2px solid #007bff;
+      }
+
+      .selected::before {
+        content: "✔";
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #007bff;
+        font-size: 20px;
+      }
+
+      #btn {
+        padding: 12px 20px;
+        background-color: #00bcd4;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 30px;
+        transition: all 0.3s ease;
+      }
+
+      #btn:hover {
+        background-color: #0097a7;
+        transform: scale(1.05);
+      }
+
+      #btn:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+      }
+
+      @media (max-width: 600px) {
+        body {
+          padding: 10px;
+        }
+
+        h1 {
+          font-size: 25px;
+        }
+
+        label {
+          width: 80%;
+          font-size: 16px;
+        }
+
+        #timer {
+          font-size: 30px;
+        }
+      }
+
+      /* New Form Styles */
+      .form-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 20px;
+      }
+
+      .form-container input {
+        padding: 10px;
+        margin: 10px;
+        width: 250px;
+        border-radius: 5px;
+        border: none;
+      }
+
+      .form-container button {
+        padding: 12px 20px;
+        background-color: #00bcd4;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      .form-container button:hover {
+        background-color: #0097a7;
+        transform: scale(1.05);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="authSection">
+      <h1>Quiz App</h1>
+
+      <!-- Signup Form -->
+      <div id="signupForm" class="form-container">
+        <h2>Sign Up</h2>
+        <input type="email" id="signupEmail" placeholder="Email" />
+        <input type="password" id="signupPassword" placeholder="Password" />
+        <button onclick="signUp()">Sign Up</button>
+        <p>Already have an account? <a href="#" onclick="showLoginForm()">Login</a></p>
+      </div>
+
+      <!-- Login Form -->
+      <div id="loginForm" class="form-container" style="display: none;">
+        <h2>Login</h2>
+        <input type="email" id="loginEmail" placeholder="Email" />
+        <input type="password" id="loginPassword" placeholder="Password" />
+        <button onclick="login()">Login</button>
+        <p>Don't have an account? <a href="#" onclick="showSignupForm()">Sign Up</a></p>
+      </div>
+    </div>
+
+    <div id="quizSection" style="display: none;">
+      <h1>Quiz App</h1>
+      <h1 id="timer">2:00</h1>
+      <p id="ques"></p>
+      <div class="options-container">
+        <input value="1" onclick="clicked()" type="radio" class="options" name="options" id="opt1" />
+        <label id="label1" for="opt1"></label><br />
+        <input value="2" onclick="clicked()" type="radio" class="options" name="options" id="opt2" />
+        <label id="label2" for="opt2"></label><br />
+        <input value="3" onclick="clicked()" type="radio" class="options" name="options" id="opt3" />
+        <label id="label3" for="opt3"></label><br />
+      </div>
+      <button id="btn" disabled onclick="showNextQuestion()">Next</button>
+      <button onclick="logout()">Log Out</button>
+    </div>
+
+    <script src="app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </body>
+</html>
